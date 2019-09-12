@@ -4,8 +4,16 @@
   "description": "my bolg admin",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "nodemon app.js"
   },
   "author": "stephen",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.8.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "mongoose": "^5.7.0",
+    "nodemon": "^1.19.2"
+  }
 }
