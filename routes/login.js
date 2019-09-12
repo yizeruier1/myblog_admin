@@ -16,7 +16,7 @@ login.post('/login', async (ctx) => {
             // 验证密码
             const isPssRight = utils.validatMd5(password, selres.password)
             if (isPssRight){
-                ctx.body = utils.sendResponse(200, '登录成功!')
+                ctx.body = utils.sendResponse(100, '登录成功!')
             }else{
                 ctx.body = utils.sendResponse(201, '密码错误!')
             }
