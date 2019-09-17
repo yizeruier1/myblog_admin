@@ -14,7 +14,7 @@ const articalSchema = new Schema({
         type: String,
         required: true
     },
-    // 文字分类   1,2,3,4,5  存逗号隔开字符串    key 值
+    // 文章分类   Vue,React  存逗号隔开字符串
     types: {
         type: String
     },
@@ -25,12 +25,26 @@ const articalSchema = new Schema({
     },
     createTime: {
         type: Date,
-        default: Date.now()
+        default: new Date()
     },
     // 浏览量
     views: {
         type: Number,
         default: 0
+    },
+    // 文章内容
+    content: {
+        type: String
+    },
+    //  文章作者
+    author: {
+        type: String,
+        default: 'Stephen'
+    },
+    // 文章是否删除   用来标记 回收站
+    deleted: {
+        type: Boolean,
+        default: false
     }
 }, {
     // 不要 __v
@@ -39,23 +53,47 @@ const articalSchema = new Schema({
 
 // 文章分页查询
 articalSchema.statics.get_artical = function(param){
-    param.page = param.page - 1
+    let pageNum = Number(param.pageNum) - 1
+    let pageSize = Number(param.pageSize)
+    let data = {
+        total: 0,
+        list: []
+    }
     return new Promise((resolve, reject) => {
         // 查询数据总数
-        this.find(param).count((err, res) => {
-            if(err){
+        this.find().countDocuments((err1, res1) => {
+            if (err1) {
                 reject(1000)
-            }else{
-                console.log(`total ${res} items`)
-                if(res > 0){
-                    this.find(param).skip(param.page * param.pageSize).limit(param.pageSize).sort({ '_id': -1 }).exec((err1, res1) => {
-                        if (err1) {
+            } else {
+                if(res1 === 0){
+                    resolve([], data)
+                }else{
+                    this.find({}, { content: 0, createTime: 0, comments: 0 })
+                    .skip(pageNum * pageSize)
+                    .limit(pageSize)
+                    .sort({ '_id': 1 })
+                    .exec((err, res) => {
+                        if (err) {
                             reject(1000)
                         } else {
-                            resolve(res1, res)
+                            data.total = res1
+                            data.list = res
+                            resolve(data)
                         }
                     })
                 }
+            }
+        })
+    })
+}
+
+articalSchema.statics.get_artical_detail = function (id) {
+    return new Promise((resolve, reject) => {
+        this.findOne({ _id: id }).exec((err, res) => {
+            if (err) {
+                reject(1000)
+            } else {
+                resolve(res)
             }
         })
     })

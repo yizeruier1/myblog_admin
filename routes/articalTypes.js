@@ -1,26 +1,8 @@
 const Router = require('koa-router')
 const artical_types = require('../model/artical_types')
 const utils = require('../utils/index')
+const saveItem = require('../utils/crud').saveItem
 let articalTypes = new Router()
-
-// 保存一条记录
-const saveItem = (item) => {
-    return new Promise((resolve, reject) => {
-        item.save((err, res) => {
-            try {
-                if (err) {
-                    // 1000 查询出错
-                    reject(1000)
-                } else {
-                    resolve(res)
-                }
-            } catch (error) {
-                console.log(error)
-                reject(1000)
-            }
-        })
-    })
-}
 
 // 删除所有匹配记录
 const deleteItem = (param) => {
@@ -62,7 +44,17 @@ const updateItem = (id, param) => {
 
 // 查询 文章分类
 articalTypes.get('/allArticalTypes', async (ctx) => {
-    const types = await artical_types.find_all(ctx.query)
+    let param = {
+        pageSize: ctx.query.pageSize,
+        pageNum: ctx.query.pageNum
+    }
+    if (!ctx.query.pageSize){
+        param.pageSize = 10
+    }
+    if (!ctx.query.pageNum) {
+        param.pageNum = 1
+    }
+    const types = await artical_types.find_all(param)
     if(types){
         ctx.body = utils.sendResponse(100, 'success', types)
     }else{
@@ -101,10 +93,11 @@ articalTypes.delete('/deleteArticalTypes', async (ctx) => {
 
 // 更新文章分类
 articalTypes.post('/updateArticalTypes', async (ctx) => {
-    let { _id, key, value } = ctx.request.body
+    let { _id, key, value, color } = ctx.request.body
     const res = await updateItem(_id, {
         key,
-        value
+        value,
+        color
     })
     if (res) {
         ctx.body = utils.sendResponse(100, '更新成功')

@@ -4,7 +4,11 @@ const Schema = mongoose.Schema
 // 建Schema    表结构
 const articalTypesSchema = new Schema({
     key: Number,
-    value: String
+    value: String,
+    color: {
+        type: String,
+        default: ''
+    }
 }, {
     // 不要 __v
     versionKey: false
