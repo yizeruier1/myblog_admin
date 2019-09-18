@@ -52,7 +52,7 @@ const articalSchema = new Schema({
 })
 
 // 文章分页查询
-articalSchema.statics.get_artical = function(param){
+articalSchema.statics.get_artical = function (param, deleted = false) {
     let pageNum = Number(param.pageNum) - 1
     let pageSize = Number(param.pageSize)
     let data = {
@@ -61,14 +61,14 @@ articalSchema.statics.get_artical = function(param){
     }
     return new Promise((resolve, reject) => {
         // 查询数据总数
-        this.find().countDocuments((err1, res1) => {
+        this.find({ deleted: deleted }).countDocuments((err1, res1) => {
             if (err1) {
                 reject(1000)
             } else {
                 if(res1 === 0){
                     resolve([], data)
                 }else{
-                    this.find({}, { content: 0, createTime: 0, comments: 0 })
+                    this.find({ deleted: deleted }, { content: 0, createTime: 0, comments: 0 })
                     .skip(pageNum * pageSize)
                     .limit(pageSize)
                     .sort({ '_id': 1 })

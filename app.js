@@ -1,10 +1,15 @@
 const Koa = require('koa')
+const logger = require('koa-logger')
 const mongoose = require('mongoose')
+const koajwt = require('koa-jwt')
 const Router = require('koa-router')
 const koaBody = require('koa-body')
 const static = require('koa-static')
 const path = require('path')
 const host = require('./appConfig').host
+const secriteKey = require('./appConfig').secriteKey
+const frontApi = require('./appConfig').frontApi
+const jwtAuth = require('./utils/jwt-auth')
 const app = new Koa()
 app.use(koaBody({
     multipart: true,
@@ -13,6 +18,13 @@ app.use(koaBody({
         multipart: true
     }
 }))
+app.use(jwtAuth)
+app.use(koajwt({
+    secret: secriteKey
+}).unless({
+    path: frontApi
+}))
+app.use(logger())
 app.use(static(path.join(__dirname, '/static/')))
 
 // 连接数据库

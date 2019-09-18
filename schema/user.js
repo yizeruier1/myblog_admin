@@ -41,7 +41,7 @@ const userSchema = new Schema({
     },
     createTime: {
         type: Date,
-        default: Date.now()
+        default: new Date()
     }
 }, {
     // 不要 __v
