@@ -2,26 +2,9 @@ const Router = require('koa-router')
 const user_list = require('../model/user_lists')
 const sendResponse = require('../utils/index').sendResponse
 const createMd5 = require('../utils/index').createMd5
+const saveItem = require('../utils/crud').saveItem
 let register = new Router()
 
-// 用户 入库
-const saveUser = user => {
-    return new Promise((resolve, reject) => {
-        user.save((err, res) => {
-            try {
-                if (err) {
-                    // 1000 查询出错
-                    reject(1000)
-                } else {
-                    resolve(res)
-                }
-            } catch (error) {
-                console.log(error)
-                reject(1000)
-            }
-        })
-    })
-}
 
 register.post('/register', async (ctx) => {
     let { email, password } = ctx.request.body
@@ -36,7 +19,7 @@ register.post('/register', async (ctx) => {
             email,
             password
         })
-        const insertres = await saveUser(user)
+        const insertres = await saveItem(user)
         if (insertres){
             ctx.body = sendResponse(100, 'success', insertres)
         }else{

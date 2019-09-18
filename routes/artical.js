@@ -1,21 +1,17 @@
 const Router = require('koa-router')
 const articals = require('../model/articals')
 const utils = require('../utils/index')
-const saveItem = require('../utils/crud').saveItem
+const CRUD = require('../utils/crud')
 let articalRoute = new Router()
 
 
 // 查文章列表
 articalRoute.get('/allArtical', async (ctx) => {
+    let pageSize = ctx.query.pageSize || 10
+    let pageNum = ctx.query.pageNum || 1
     let param = {
-        pageSize: ctx.query.pageSize,
-        pageNum: ctx.query.pageNum
-    }
-    if (!ctx.query.pageSize) {
-        param.pageSize = 10
-    }
-    if (!ctx.query.pageNum) {
-        param.pageNum = 1
+        pageSize,
+        pageNum
     }
     const res = await articals.get_artical(param)
     if (res) {
@@ -35,7 +31,7 @@ articalRoute.post('/addArtical', async (ctx) => {
         const item = new articals({
             ...ctx.request.body
         })
-        const res = await saveItem(item)
+        const res = await CRUD.saveItem(item)
         if(res){
             ctx.body = utils.sendResponse(100, '插入成功')
         }else{

@@ -12,7 +12,6 @@ login.post('/login', async (ctx) => {
         if (!selres){
             ctx.body = utils.sendResponse(201, '用户不存在!')
         }else{
-            console.log(selres)
             // 验证密码
             const isPssRight = utils.validatMd5(password, selres.password)
             if (isPssRight){
