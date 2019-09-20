@@ -48,6 +48,10 @@ articalRoute.post('/addArtical', async (ctx) => {
 articalRoute.get('/articalDetail', async (ctx) => {
     const res = await articals.get_artical_detail(ctx.query.id)
     if (res) {
+        // 查询 成功 增加一个 浏览次数
+        CRUD.updateItem(articals, ctx.query.id, {
+            views: res.views + 1
+        })
         ctx.body = utils.sendResponse(100, 'success', res)
     } else {
         ctx.body = utils.sendResponse(201, '系统故障', res)

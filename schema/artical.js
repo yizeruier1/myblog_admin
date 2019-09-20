@@ -68,10 +68,10 @@ articalSchema.statics.get_artical = function (param, deleted = false) {
                 if(res1 === 0){
                     resolve([], data)
                 }else{
-                    this.find({ deleted: deleted }, { content: 0, createTime: 0, comments: 0 })
+                    this.find({ deleted: deleted }, { content: 0, comments: 0 })
                     .skip(pageNum * pageSize)
                     .limit(pageSize)
-                    .sort({ '_id': 1 })
+                    .sort({ '_id': -1 })
                     .exec((err, res) => {
                         if (err) {
                             reject(1000)

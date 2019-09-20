@@ -17,7 +17,8 @@ register.post('/register', async (ctx) => {
         password = createMd5(password)
         const user = new user_list({
             email,
-            password
+            password,
+            username: name
         })
         const insertres = await saveItem(user)
         if (insertres){

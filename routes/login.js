@@ -11,14 +11,21 @@ login.post('/login', async (ctx) => {
         ctx.body = utils.sendResponse(201, '输入不能为空!')
     }else{
         const selres = await user_list.find_by_email(email)
+        console.log(selres)
         if (!selres){
             ctx.body = utils.sendResponse(201, '用户不存在!')
         }else{
             // 验证密码
             const isPssRight = utils.validatMd5(password, selres.password)
             if (isPssRight){
+                const { name, gender, ava, email, sign, age } = selres
                 const token = jwt.sign({
-                    ...selres
+                    name,
+                    gender,
+                    ava,
+                    email,
+                    sign,
+                    age
                 }, secriteKey, {
                     expiresIn: '720h'
                 })
