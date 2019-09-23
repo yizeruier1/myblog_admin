@@ -7,7 +7,6 @@ let articalRoute = new Router()
 
 // 查文章列表
 articalRoute.get('/allArtical', async (ctx) => {
-    // console.log(ctx.state.user._doc)
     let deleted = false
     let pageSize = ctx.query.pageSize || 10
     let pageNum = ctx.query.pageNum || 1
