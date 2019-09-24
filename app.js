@@ -46,6 +46,7 @@ const articalTypes = require('./routes/articalTypes')
 const uploadImg = require('./routes/uploadImg')
 const articalRoute = require('./routes/artical')
 const uploadEditorImg = require('./routes/uploadEditorImg')
+const commentsRoute = require('./routes/comments')
 
 
 // 装载所有路由
@@ -55,6 +56,7 @@ router.use(articalTypes.routes(), articalTypes.allowedMethods())
 router.use(uploadImg.routes(), uploadImg.allowedMethods())
 router.use(articalRoute.routes(), articalRoute.allowedMethods())
 router.use(uploadEditorImg.routes(), uploadEditorImg.allowedMethods())
+router.use(commentsRoute.routes(), commentsRoute.allowedMethods())
 
 
 // 加载路由中间件

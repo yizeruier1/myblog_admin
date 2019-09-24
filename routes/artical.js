@@ -26,13 +26,15 @@ articalRoute.get('/allArtical', async (ctx) => {
 
 // 新增文章
 articalRoute.post('/addArtical', async (ctx) => {
+    const { name: author } = ctx.state.user
     let { title, types, desc, coverImg } = ctx.request.body
     if (!title || !types || !desc || !coverImg) {
         ctx.body = utils.sendResponse(201, '缺少参数')
     }else{
         ctx.request.body.comments = Number(ctx.request.body.comments)
         const item = new articals({
-            ...ctx.request.body
+            ...ctx.request.body,
+            author
         })
         const res = await CRUD.saveItem(item)
         if(res){
@@ -59,10 +61,12 @@ articalRoute.get('/articalDetail', async (ctx) => {
 
 // 文章更新
 articalRoute.post('/updateArtical', async (ctx) => {
+    const { name: author } = ctx.state.user
     ctx.request.body.comments = Number(ctx.request.body.comments)
     const id = ctx.request.body.id
     const res = await CRUD.updateItem(articals, id, {
-        ...ctx.request.body
+        ...ctx.request.body,
+        author
     })
     if (res) {
         ctx.body = utils.sendResponse(100, '更新成功')

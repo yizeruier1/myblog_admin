@@ -37,6 +37,11 @@ const commentsSchema = new Schema({
         type: String,
         default: ''
     },
+    // 评论内容
+    content: {
+        type: String,
+        required: true
+    },
     createTime: {
         type: Date,
         default: new Date()
@@ -47,7 +52,7 @@ const commentsSchema = new Schema({
 })
 
 // 查询
-commentsSchema.statics.get_comments = function (param) {
+commentsSchema.statics.get_comments = function (param, id) {
     return new Promise((resolve, reject) => {
         let pageNum = Number(param.pageNum) - 1
         let pageSize = Number(param.pageSize)
@@ -57,17 +62,17 @@ commentsSchema.statics.get_comments = function (param) {
         }
 
         // 查询总条数
-        this.find().countDocuments((err1, res1) => {
+        this.find({ articalId: id }).countDocuments((err1, res1) => {
             if (err1) {
                 reject(1000)
             } else {
                 if(res1 === 0){
                     resolve([], data)
                 }else{
-                    this.find()
+                    this.find({ articalId: id })
                     .skip(pageNum * pageSize)
                     .limit(pageSize)
-                    .sort({ '_id': 1 })
+                    .sort({ '_id': -1 })
                     .exec((err, res) => {
                         if (err) {
                             reject(1000)

@@ -18,14 +18,16 @@ login.post('/login', async (ctx) => {
             // 验证密码
             const isPssRight = utils.validatMd5(password, selres.password)
             if (isPssRight){
-                const { name, gender, ava, email, sign, age } = selres
+                const { name, gender, ava, email, sign, age, permissions, _id } = selres
                 const token = jwt.sign({
                     name,
                     gender,
                     ava,
                     email,
                     sign,
-                    age
+                    age,
+                    permissions,
+                    _id
                 }, secriteKey, {
                     expiresIn: '720h'
                 })
