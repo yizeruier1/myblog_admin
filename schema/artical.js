@@ -60,15 +60,23 @@ articalSchema.statics.get_artical = function (param, deleted = false) {
         list: []
     }
     return new Promise((resolve, reject) => {
+        let findParam = {
+            deleted: deleted
+        }
+        // 根据文章名    模糊查询
+        if(param.title) {
+            const reg = new RegExp(param.title, 'i')
+            findParam.title = { $regex :reg }
+        }
         // 查询数据总数
-        this.find({ deleted: deleted }).countDocuments((err1, res1) => {
+        this.find(findParam).countDocuments((err1, res1) => {
             if (err1) {
                 reject(1000)
             } else {
                 if(res1 === 0){
                     resolve([], data)
                 }else{
-                    this.find({ deleted: deleted }, { content: 0, comments: 0 })
+                    this.find(findParam, { content: 0, comments: 0 })
                     .skip(pageNum * pageSize)
                     .limit(pageSize)
                     .sort({ '_id': -1 })

@@ -16,6 +16,7 @@ articalRoute.get('/allArtical', async (ctx) => {
     }
     // 查询 在回收站里的 文章
     if (ctx.query.deleted) deleted = true
+    if (ctx.query.title) param.title = ctx.query.title
     const res = await articals.get_artical(param, deleted)
     if (res) {
         ctx.body = utils.sendResponse(100, 'success', res)
